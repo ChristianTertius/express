@@ -1,23 +1,71 @@
-const fs = require("fs");
-const readLine = require('readline');
+const yargs = require("yargs");
+const contacts = require("./contacts");
 
-const rl = readLine.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-
-rl.question('Masukkan nama anda: ', (nama) => {
-  rl.question('Masukkan no Hp anda: ', (noHP) => {
-    const contact = {nama, noHP}
-    const file = fs.readFileSync('data/contacts.json', 'utf-8');
-    const contacts = JSON.parse(file)
-   
-    contacts.push(contact);
-    
-    fs.writeFileSync('data/contacts.json', JSON.stringify(contacts));
-    console.log('Terima Kasih sudah memasukkan data');
-    
-    
-    rl.close();
+yargs
+  .command({
+    command: "add",
+    describe: "Menambahkan contact baru",
+    builder: {
+      nama: {
+        describe: "Nama Lengkap",
+        demandOption: "String",
+        type: "string",
+      },
+      email: {
+        describe: "Email",
+        demnadOption: "false",
+        type: "string",
+      },
+      noHP: {
+        describe: "Nomor HP",
+        demandOption: "true",
+        type: "string",
+      },
+    },
+    handler(argv) {
+      contacts.simpanContact(argv.nama, argv.email, argv.noHP);
+    },
   })
-})
+  .demandCommand();
+
+// Menampilkan daftar semua nama contact
+yargs.command({
+  command: "list",
+  describe: "Menampilkan semua naam & no HP contact",
+  handler() {
+    contacts.listContact();
+  },
+});
+
+// Menampilkan detail sebuah kontak
+yargs.command({
+  command: "detail",
+  describe: "Menampilkan detail sebuah kontak berdasarkan nama",
+  builder: {
+    nama: {
+      describe: "Nama Lengkap",
+      demandOption: "String",
+      type: "string",
+    },
+  },
+  handler(argv) {
+    contacts.detailContact(argv.nama);
+  },
+});
+
+// Menghapus contact berdasarkan nama
+yargs.command({
+  command: "delete",
+  describe: "Menghapus sebuah kontak berdasarkan nama",
+  builder: {
+    nama: {
+      describe: "Nama Lengkap",
+      demandOption: "String",
+      type: "string",
+    },
+  },
+  handler(argv) {
+    contacts.deleteContact(argv.nama);
+  },
+});
+yargs.parse();
