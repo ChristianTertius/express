@@ -1,42 +1,53 @@
-const express = require("express");
+// const express = require("express");
+const expressLayouts = require("express-ejs-layouts");
 const app = express();
 const port = 3000;
 
 // gunakan ejs
-app.set('view engine', 'ejs');
+app.set("view engine", "ejs"); // ejsnya langsung di declare disini (tidak perlu pake require)
+app.use(expressLayouts);
 
 app.get("/", (req, res) => {
   const mahasiswa = [
     {
       nama: "Budi Santoso",
-      email: 'budi@gmail.com'
+      email: "budi@gmail.com",
     },
     {
       nama: "Sinta Sintaan",
-      email: 'sinta@gmail.com'
+      email: "sinta@gmail.com",
     },
     {
       nama: "Fachrian",
-      email: 'jambu@gmail.com'
+      email: "jambu@gmail.com",
     },
-  ]
-  res.render('index', {
-    nama: 'Budi Santoso',
-    title: 'Halaman Home',
-    mahasiswa
+  ];
+  res.render("index", {
+    nama: "Budi Santoso",
+    title: "Halaman Home",
+    mahasiswa,
+    layout: 'layouts/main-layout'
   });
 });
 
 app.get("/about", (req, res) => {
-  res.render('about');
+  res.render("about", {
+    layout: "layouts/main-layout",
+    title: "Halaman About",
+  });
 });
 
 app.get("/contact", (req, res) => {
-  res.render('contact');
+  res.render("contact", {
+    layout: "layouts/main-layout",
+    title: "Halaman Contact",
+  });
 });
 
 app.get("/product/:id", (req, res) => {
-  res.send(`Product ID: ${req.params.id} <br> Category ID: ${req.query.category}`);
+  res.send(
+    `Product ID: ${req.params.id} <br> Category ID: ${req.query.category}`
+  );
 });
 
 app.use("/", (req, res) => {

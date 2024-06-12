@@ -1,6 +1,4 @@
 const fs = require("fs");
-const chalk = require("chalk");
-const validator = require("validator");
 
 // create data folder if not exist
 const dirPath = "./data";
@@ -26,7 +24,9 @@ const simpanContact = (nama, email, noHP) => {
   // Cek duplicate
   const duplicate = contacts.find((contact) => contact.nama === nama);
   if (duplicate) {
-    console.log(chalk.red.inverse.bold("Contact sudah terdaftar, gunakan nama lain!"));
+    console.log(
+      chalk.red.inverse.bold("Contact sudah terdaftar, gunakan nama lain!")
+    );
     return false;
   }
 
@@ -61,7 +61,9 @@ const listContact = () => {
 const detailContact = (nama) => {
   const contacts = loadContact();
 
-  const contact = contacts.find((contact) => contact.nama.toLowerCase() === nama.toLowerCase());
+  const contact = contacts.find(
+    (contact) => contact.nama.toLowerCase() === nama.toLowerCase()
+  );
 
   if (!contact) {
     console.log(chalk.red.inverse.bold(`${nama} tidak ditemukan`));
@@ -89,7 +91,9 @@ const detailContact = (nama) => {
 
 const deleteContact = (nama) => {
   const contacts = loadContact();
-  const newContacts = contacts.filter((contact) => contact.nama.toLowerCase() !== nama.toLowerCase());
+  const newContacts = contacts.filter(
+    (contact) => contact.nama.toLowerCase() !== nama.toLowerCase()
+  );
 
   // Jika tidak ada yang ditemukan
   if (contacts.length === newContacts.length) {
@@ -98,7 +102,9 @@ const deleteContact = (nama) => {
   }
 
   fs.writeFileSync("data/contacts.json", JSON.stringify(newContacts));
-  console.log(chalk.green.inverse.bold(`Data kontak ${nama} berhasil di hapus`));
+  console.log(
+    chalk.green.inverse.bold(`Data kontak ${nama} berhasil di hapus`)
+  );
 };
 
 module.exports = {
